@@ -39,6 +39,107 @@ AND salary_year_avg IS NOT NULL
 ORDER BY salary_year_avg DESC
 limit 10;
 ```
+### What are the skills required for the top paying jobs for my role?
+To identify the skills required for the highest-paying Data Analyst roles, I used a Common Table Expression (CTE) to first isolate the top 10 highest-paying jobs. Then, I joined this result with the skills tables to extract the specific skills associated with these roles. This helps understand what technical expertise is expected for top-tier positions.
+```sql
+WITH top_paying_jobs AS (
+    SELECT 
+        jpf.job_id, 
+        jpf.job_title, 
+        jpf.job_location, 
+        jpf.job_schedule_type, 
+        jpf.salary_year_avg, 
+        jpf.job_posted_date,
+        name AS company_name
+    FROM job_postings_fact AS jpf
+    LEFT JOIN company_dim AS cd 
+        ON cd.company_id = jpf.company_id
+    WHERE job_title_short = 'Data Analyst' 
+      AND job_location = 'Anywhere' 
+      AND salary_year_avg IS NOT NULL
+    ORDER BY salary_year_avg DESC
+    LIMIT 10
+)
+SELECT tpj.*, sd.skills
+FROM top_paying_jobs AS tpj
+INNER JOIN skills_job_dim AS sjd 
+    ON tpj.job_id = sjd.job_id
+INNER JOIN skills_dim AS sd 
+    ON sd.skill_id = sjd.skill_id
+ORDER BY tpj.salary_year_avg DESC
+LIMIT 10;
+```
+### What are the most in-demand skills for my role?
+To determine the most in-demand skills, I analyzed remote Data Analyst job postings and counted how frequently each skill appeared. This approach highlights the skills that employers are actively seeking in the current job market.
+```sql
+WITH remote_job_skills AS (
+    SELECT 
+        sdd.skill_id,
+        COUNT(*) AS skill_count
+    FROM skills_job_dim AS sjd
+    INNER JOIN job_postings_fact AS sd 
+        ON sd.job_id = sjd.job_id
+    INNER JOIN skills_dim AS sdd 
+        ON sdd.skill_id = sjd.skill_id
+    WHERE sd.job_work_from_home = TRUE 
+      AND job_title_short = 'Data Analyst'
+    GROUP BY sdd.skill_id
+    LIMIT 5
+)
+SELECT 
+    skd.skill_id, 
+    skd.skills, 
+    skill_count
+FROM remote_job_skills AS rjs
+INNER JOIN skills_dim AS skd 
+    ON skd.skill_id = rjs.skill_id;
+```
+
+### What are the top skills based on salary?
+To understand which skills offer the highest financial return, I calculated the average salary associated with each skill for Data Analyst roles. This helps identify which technical skills are most valuable in terms of compensation.
+```sql
+SELECT 
+    sd.skills,  
+    ROUND(AVG(salary_year_avg), 2) AS avg_salary
+FROM job_postings_fact AS jpf
+INNER JOIN skills_job_dim AS sjd 
+    ON sjd.job_id = jpf.job_id
+INNER JOIN skills_dim AS sd 
+    ON sd.skill_id = sjd.skill_id
+WHERE salary_year_avg IS NOT NULL 
+  AND job_title_short = 'Data Analyst'
+  AND job_location = 'Anywhere'
+GROUP BY sd.skills
+ORDER BY avg_salary DESC
+LIMIT 10;
+```
+What are the most optimal skills to learn?
+To find the most optimal skills, I combined both demand (frequency of job postings) and salary data. By filtering skills with significant demand and high average salaries, this query identifies the best skills to focus on for maximizing career growth and earning potential.
+```sql
+SELECT 
+    sd.skill_id, 
+    sd.skills, 
+    COUNT(skills_job_dim.job_id) AS skill_count, 
+    ROUND(AVG(jpf.salary_year_avg), 2) AS avg_salary 
+FROM job_postings_fact AS jpf 
+INNER JOIN skills_job_dim 
+    ON jpf.job_id = skills_job_dim.job_id 
+INNER JOIN skills_dim AS sd 
+    ON sd.skill_id = skills_job_dim.skill_id 
+WHERE jpf.job_work_from_home = TRUE 
+  AND jpf.job_title_short = 'Data Analyst' 
+  AND jpf.salary_year_avg IS NOT NULL 
+GROUP BY 
+    sd.skill_id, 
+    sd.skills
+HAVING COUNT(skills_job_dim.job_id) > 10 
+ORDER BY 
+    avg_salary DESC, 
+    skill_count DESC 
+LIMIT 25;
+```
+
+
 ## What I learned
 Throughout this adventure, I have turbocharged my SQL toolkit with some serious firepower:
 
