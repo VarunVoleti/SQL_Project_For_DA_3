@@ -1,0 +1,50 @@
+
+SELECT *
+FROm job_postings_fact
+limit 100;
+
+SELECT job_posted_date,job_posted_date::DATE AS job_posted_date
+FROm job_postings_fact
+limit 100;
+
+SELECT 
+'2024-06-01',
+'123'::INTEGER,
+'TRUE'::BOOLEAN,
+'2.34'::FLOAT;
+
+SELECT job_title_short as title, 
+job_location as location, job_posted_date::DATE as date 
+from job_postings_fact;
+
+SELECT job_title_short as title, 
+job_location as location, job_posted_date AT TIME ZONE 'UTC' AT TIME ZONE 'EST' as date
+from job_postings_fact
+LIMIT 50;
+
+SELECT count(job_id), EXTRACT(MONTH FROM job_posted_date) AS MONTH,
+EXTRACT(YEAR FROM job_posted_date) AS YEAR
+FROM job_postings_fact
+WHERE job_title_short = 'Data Analyst'
+GROUP BY MONTH, YEAR
+ORDER BY count(job_id) DESC
+LIMIT 50;
+
+SELECT job_schedule_type,avg(salary_year_avg) as avg_yearly_pay, avg(salary_hour_avg) as avg_monthly_pay
+FROM job_postings_fact
+WHERE job_posted_date >= '06-01-2023'
+GROUP BY job_schedule_type
+LIMIT 100;
+
+SELECT count(job_posted_date),
+EXTRACT(MONTH FROM job_posted_date) AS MONTH, EXTRACT(QUARTER FROM job_posted_date) AS QUARTER
+FROM job_postings_fact
+GROUP BY MONTH
+ORDER BY MONTH
+LIMIT 100;
+
+SELECT job_title_short, EXTRACT(QUARTER FROM job_posted_date) AS QUARTER,
+EXTRACT(MONTH FROM job_posted_date) AS MONTH 
+FROM job_postings_fact
+WHERE EXTRACT(QUARTER FROM job_posted_date) = 2 AND job_health_insurance = TRUE
+limit 100;
