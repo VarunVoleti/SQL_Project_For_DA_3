@@ -13,13 +13,13 @@ NOTE: If you are having issues with permissions. And you get error:
     1. Find path by right-clicking a CSV file in VS Code and selecting “Copy Path”
 5. Paste the following into `PSQL Tool`, (with the CORRECT file path)
 
-\copy company_dim FROM '[Insert File Path]/company_dim.csv' WITH (FORMAT csv, HEADER true, DELIMITER ',', ENCODING 'UTF8');
+\copy company_dim FROM '/Users/varun/Desktop/python 2026/basics of python- datatypes,operators,statements/SQL_Project_For_DA_3/csv_files/company_dim.csv' WITH (FORMAT csv, HEADER true, DELIMITER ',', ENCODING 'UTF8');
 
-\copy skills_dim FROM '[Insert File Path]/skills_dim.csv' WITH (FORMAT csv, HEADER true, DELIMITER ',', ENCODING 'UTF8');
+\copy skills_dim FROM '/Users/varun/Desktop/python 2026/basics of python- datatypes,operators,statements/SQL_Project_For_DA_3/csv_files/skills_dim.csv' WITH (FORMAT csv, HEADER true, DELIMITER ',', ENCODING 'UTF8');
 
-\copy job_postings_fact FROM '[Insert File Path]/job_postings_fact.csv' WITH (FORMAT csv, HEADER true, DELIMITER ',', ENCODING 'UTF8');
+\copy job_postings_fact FROM '/Users/varun/Desktop/python 2026/basics of python- datatypes,operators,statements/SQL_Project_For_DA_3/csv_files/job_postings_fact.csv' WITH (FORMAT csv, HEADER true, DELIMITER ',', ENCODING 'UTF8');
 
-\copy skills_job_dim FROM '[Insert File Path]/skills_job_dim.csv' WITH (FORMAT csv, HEADER true, DELIMITER ',', ENCODING 'UTF8');
+\copy skills_job_dim FROM '/Users/varun/Desktop/python 2026/basics of python- datatypes,operators,statements/SQL_Project_For_DA_3/csv_files/skills_job_dim.csv' WITH (FORMAT csv, HEADER true, DELIMITER ',', ENCODING 'UTF8');
 
 */
 
@@ -39,3 +39,8 @@ DELIMITER ',' CSV HEADER;
 COPY skills_job_dim
 FROM '/Users/varun/Desktop/python 2026/basics of python- datatypes,operators,statements/SQL_Project_For_DA_3/csv_files/skills_job_dim.csv'
 DELIMITER ',' CSV HEADER;
+
+
+SELECT *
+FROM job_postings_fact
+LIMIT 100;
