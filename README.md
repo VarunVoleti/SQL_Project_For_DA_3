@@ -1,1 +1,1 @@
-### Project 3 on SQL for data analysis
+# Project 3 on SQL for data analysis
