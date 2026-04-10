@@ -1,6 +1,8 @@
 # Project 3 on SQL for data analysis
 ## Introduction
 In this project I dove into data job market, Focusing on Data Analyst roles. This project explores top paying jobs, in demand skills and were high demand meets high salary in data analytics.
+My SQL Queries! Check them out here: [SQL_Project3 folder](/SQL_Project3/)
+
 
 ## Background
 While I am serching for Data Analyst roles in job market, I found a dataset from Luke B and this project was born from a desire to pinpoint top-paid and in demand skills to find optimal jobs
